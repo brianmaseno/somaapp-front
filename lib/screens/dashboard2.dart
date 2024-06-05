@@ -60,10 +60,7 @@ class MainPage extends StatelessWidget {
                 fontFamily: 'Poppins'
               ),
             ),
-            Text(_userModel![0].id.toString()),
-                          Text(_userModel![0].username),
-                          // Remove the line or replace `index` with a valid index value
-                          // Text(_userModel![index].phone),
+            
             const SizedBox(height: 10),
             const Text(
               'What would you like to study?',
