@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:somaapp/model/user_model.dart';
+import 'package:somaapp/services/api_services.dart';
 
 class MainPage extends StatelessWidget {
+  late List<UserModel>? _userModel = [];
+
+ 
   final List<Category> categories = [
     Category(name: 'Maths', imagePath: 'assets/pic1.png'),
     Category(name: 'English', imagePath: 'assets/pic2.png'),
@@ -11,6 +16,9 @@ class MainPage extends StatelessWidget {
     Category(name: 'Business Studies', imagePath: 'assets/pic1.png'),
     Category(name: 'Home Science', imagePath: 'assets/pic1.png'),
   ];
+   
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +33,7 @@ class MainPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                 
                 Image.asset(
                   'assets/pic1.png',
                   width: 60,
@@ -51,6 +60,10 @@ class MainPage extends StatelessWidget {
                 fontFamily: 'Poppins'
               ),
             ),
+            Text(_userModel![0].id.toString()),
+                          Text(_userModel![0].username),
+                          // Remove the line or replace `index` with a valid index value
+                          // Text(_userModel![index].phone),
             const SizedBox(height: 10),
             const Text(
               'What would you like to study?',
@@ -86,6 +99,8 @@ class MainPage extends StatelessWidget {
 }
 
 class CategoryCard extends StatelessWidget {
+  
+
   final Category category;
 
   CategoryCard({required this.category});

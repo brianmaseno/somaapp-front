@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:somaapp/screens/dashboard.dart';
 import 'package:somaapp/screens/dashboard2.dart';
+import 'package:somaapp/screens/home.dart';
 
 void main() {
   runApp(const MyApp());
