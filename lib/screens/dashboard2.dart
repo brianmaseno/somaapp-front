@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:somaapp/model/user_model.dart';
+import 'package:somaapp/screens/DetailPage.dart';
 import 'package:somaapp/services/api_services.dart';
-import 'package:somaapp/services/api_services.dart';
+ // Import the detail page
 
 class MainPage extends StatefulWidget {
   @override
@@ -19,8 +20,6 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> fetchUserData() async {
     try {
-      
-
       final apiService = ApiService();
       final userModels = await apiService.getUsers();
       setState(() {
@@ -83,23 +82,49 @@ class _MainPageState extends State<MainPage> {
             const SizedBox(height: 20),
             // Categories Grid
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                ),
-                itemCount: _userModels?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final userModel = _userModels?[index];
-                  return UserCard(
-                    username: userModel?.username ?? '',
-                    phone: userModel?.phone ?? '',
-                    name: userModel?.name ?? '',
-                  );
-                },
-              ),
+              child: _userModels?.isNotEmpty ?? false
+                  ? GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
+                      ),
+                      itemCount: _userModels?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final userModel = _userModels?[index];
+                        return GestureDetector(
+                          onTap: () {
+                            // Navigate to the detail page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                  userModel: userModel!,
+                                ),
+                              ),
+                            );
+                          },
+                          child: UserCard(
+                            username: userModel?.username ?? '',
+                            phone: userModel?.phone ?? '',
+                            name: userModel?.name ?? '',
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text(
+                        'Sorry, there is no subjects available at the moment.',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 206, 49, 49),
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),
@@ -113,9 +138,11 @@ class UserCard extends StatelessWidget {
   final String phone;
   final String name;
 
-  UserCard({required this.username, 
-  required this.phone,
-  required this.name});
+  UserCard({
+    required this.username,
+    required this.phone,
+    required this.name,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +165,8 @@ class UserCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Color.fromARGB(255, 42, 10, 102),
+              fontFamily: 'Poppins',
             ),
           ),
           const SizedBox(height: 10),
@@ -147,6 +175,7 @@ class UserCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               color: Colors.black,
+              fontFamily: 'Poppins',
             ),
           ),
           const SizedBox(height: 10),
