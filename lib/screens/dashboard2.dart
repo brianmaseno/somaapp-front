@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:somaapp/model/user_model.dart';
 import 'package:somaapp/services/api_services.dart';
+import 'package:somaapp/services/api_services.dart';
 
-class MainPage extends StatelessWidget {
-  late List<UserModel>? _userModel = [];
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
 
- 
-  final List<Category> categories = [
-    Category(name: 'Maths', imagePath: 'assets/pic1.png'),
-    Category(name: 'English', imagePath: 'assets/pic2.png'),
-    Category(name: 'Kiswahili', imagePath: 'assets/pic3.png'),
-    Category(name: 'Agriculture', imagePath: 'assets/pic4.png'),
-    Category(name: 'C.R.E', imagePath: 'assets/pic1.png'),
-    Category(name: 'I.R.E', imagePath: 'assets/pic1.png'),
-    Category(name: 'Business Studies', imagePath: 'assets/pic1.png'),
-    Category(name: 'Home Science', imagePath: 'assets/pic1.png'),
-  ];
-   
+class _MainPageState extends State<MainPage> {
+  late List<UserModel>? _userModels = [];
 
-  
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      
+
+      final apiService = ApiService();
+      final userModels = await apiService.getUsers();
+      setState(() {
+        _userModels = userModels;
+      });
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +44,6 @@ class MainPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 
                 Image.asset(
                   'assets/pic1.png',
                   width: 60,
@@ -57,10 +67,9 @@ class MainPage extends StatelessWidget {
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 4, 75, 6),
-                fontFamily: 'Poppins'
+                fontFamily: 'Poppins',
               ),
             ),
-            
             const SizedBox(height: 10),
             const Text(
               'What would you like to study?',
@@ -68,7 +77,6 @@ class MainPage extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
-                
                 fontFamily: 'Poppins',
               ),
             ),
@@ -82,9 +90,14 @@ class MainPage extends StatelessWidget {
                   crossAxisSpacing: 15,
                   mainAxisSpacing: 15,
                 ),
-                itemCount: categories.length,
+                itemCount: _userModels?.length ?? 0,
                 itemBuilder: (context, index) {
-                  return CategoryCard(category: categories[index]);
+                  final userModel = _userModels?[index];
+                  return UserCard(
+                    username: userModel?.username ?? '',
+                    phone: userModel?.phone ?? '',
+                    name: userModel?.name ?? '',
+                  );
                 },
               ),
             ),
@@ -95,12 +108,14 @@ class MainPage extends StatelessWidget {
   }
 }
 
-class CategoryCard extends StatelessWidget {
-  
+class UserCard extends StatelessWidget {
+  final String username;
+  final String phone;
+  final String name;
 
-  final Category category;
-
-  CategoryCard({required this.category});
+  UserCard({required this.username, 
+  required this.phone,
+  required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -118,17 +133,27 @@ class CategoryCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            category.imagePath,
-            width: 80,
-            height: 80,
-          ),
-          const SizedBox(height: 10),
           Text(
-            category.name,
+            username,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            name,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            phone,
+            style: const TextStyle(
+              fontSize: 16,
               color: Colors.black,
             ),
           ),
@@ -136,14 +161,4 @@ class CategoryCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class Category {
-  final String name;
-  final String imagePath;
-
-  Category({
-    required this.name,
-    required this.imagePath,
-  });
 }
